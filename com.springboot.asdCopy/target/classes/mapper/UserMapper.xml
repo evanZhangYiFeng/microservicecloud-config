@@ -7,6 +7,6 @@
 	</resultMap>
 	
     <select id="findUser" resultType="com.springboot.asdCopy.entity.User">
-        SELECT name,password,active_time from User where name = #{name} and password = #{password} 
+        SELECT name,password,active_time from user1 where name = #{name} and password = #{password} 
     </select>
 </mapper>

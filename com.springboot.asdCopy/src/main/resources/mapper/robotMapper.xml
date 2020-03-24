@@ -48,4 +48,12 @@
     <update id="updateButtonStatus" statementType="STATEMENT" >
     	update ASD_Robot set ${name} = ${status}
     </update>
+    
+    <update id="updateCoordsByMqtt" parameterType="java.util.Map">
+    	update ASD_Robot set
+    	<foreach collection="mqttMap.entrySet()" item="value" index="key" separator=",">
+    		${key} = ${value}
+    	</foreach>
+    	where id = 1
+    </update>
 </mapper>

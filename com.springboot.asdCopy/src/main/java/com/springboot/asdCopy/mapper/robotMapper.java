@@ -1,6 +1,7 @@
 package com.springboot.asdCopy.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,4 +17,6 @@ public interface robotMapper {
 	public int updateButtonStatus(@Param("name") String name, @Param("status") String status);
 	
 	public String getButtonStatus(@Param("name") String name);
+	
+	public int updateCoordsByMqtt(@Param("mqttMap") Map<String, String> map);
 }

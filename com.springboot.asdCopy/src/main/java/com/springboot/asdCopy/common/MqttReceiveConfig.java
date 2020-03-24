@@ -1,5 +1,11 @@
 package com.springboot.asdCopy.common;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 import com.springboot.asdCopy.service.robotService;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -87,7 +94,7 @@ public class MqttReceiveConfig {
 	@Bean
 	public MessageProducer inbound(MqttPahoClientFactory clientFactory, MessageChannel mqttInputChannel) {
 		// clientId 客户端ID，生产端和消费端的客户端ID需不同，不然服务器会认为是同一个客户端，会接收不到信息
-		// topic 订阅的主题
+		// defaultTopic 订阅的主题
 		MqttPahoMessageDrivenChannelAdapter adapter = new MqttPahoMessageDrivenChannelAdapter(clientId, clientFactory,
 				defaultTopic);
 		// 超时时间
@@ -110,8 +117,15 @@ public class MqttReceiveConfig {
 		return new MessageHandler() {
 			public void handleMessage(Message<?> message) throws MessagingException {
 				JSONObject json = JSONObject.fromObject(message.getPayload());
-				service.updateButtonStatus("x0", json.get("x0").toString());
-				System.out.println(json.get("x0"));
+				//通过迭代器,遍历jsonObject的元素
+				Iterator iterator = json.keys();  
+				Map<String, String> map = new HashMap<String, String>();
+				while(iterator.hasNext()){  
+				       String key = (String) iterator.next();  
+				       String value = json.getString(key);//这里可以根据实际类型去获取
+				       map.put(key, value);
+				}  
+				service.updateCoordsByMqtt(map);
 			}
 		};
 	}
